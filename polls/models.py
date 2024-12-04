@@ -1,5 +1,4 @@
 import datetime
-
 from django.db import models
 from django.utils import timezone
 
@@ -12,8 +11,12 @@ class Question(models.Model):
         return self.question_text
 
     def was_published_recently(self):
+        """
+        Returns True if the question was published in the last 24 hours.
+        """
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
+
     was_published_recently.admin_order_field = 'pub_date'
     was_published_recently.boolean = True
     was_published_recently.short_description = 'Published recently?'
@@ -27,9 +30,11 @@ class Choice(models.Model):
     def __str__(self):
         return self.choice_text
 
+
 class Categoria(models.Model):
-    Abr = models.CharField(max_length=4)
-    Nombre = models.CharField(max_length=50)
+    Abr = models.CharField(max_length=4, default='DEF') 
+    Nombre = models.CharField(max_length=50, default='Sin nombre')
+    Cantidad = models.IntegerField(default=0)  # Nuevo campo añadido
 
     def __str__(self):
-        return self.Abr + " - " + self.Nombre
+        return f"{self.abr} - {self.nombre}"
