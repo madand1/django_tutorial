@@ -7,6 +7,7 @@ from django.utils import timezone
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
+    usuario = models.CharField(max_length=200, default='', blank=True)
 
     def __str__(self):
         return self.question_text
@@ -34,5 +35,6 @@ class Categoria(models.Model):
     Abr = models.CharField(max_length=4)
     Nombre = models.CharField(max_length=50)
     Cantidad = models.IntegerField(default=0)
+    
     def __str__(self):
         return self.Abr + " - " + self.Nombre
