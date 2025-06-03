@@ -58,7 +58,13 @@ pipeline {
                 }
                 stage("RemoveImage") {
                     steps {
-                        sh "docker rmi ${IMAGEN}:latest"
+                        sh '''
+                        if docker image inspect ${IMAGEN}:latest > /dev/null 2>&1; then
+                            docker rmi ${IMAGEN}:latest
+                        else
+                            echo "La imagen ${IMAGEN}:latest no existe, se omite la eliminación"
+                        fi
+                        '''
                     }
                 }
             }
