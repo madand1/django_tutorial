@@ -1,43 +1,25 @@
 pipeline {
     agent {
-        docker {
-            image 'python:3.11' // O la versión que tú usas
+        docker { image 'python:3'
+        args '-u root:root'
         }
-    }
-    environment {
-        PYTHONUNBUFFERED = 1
     }
     stages {
-        stage('Instalar dependencias') {
+        stage('Clone') {
             steps {
-                sh '''
-                    python -m pip install --upgrade pip
-                    pip install -r requirements.txt
-                '''
+                git branch:'master',url:'https://github.com/madand1/django_tutorial.git'
             }
         }
-
-        stage('Migraciones (opcional)') {
+        stage('Install') {
             steps {
-                sh 'python manage.py migrate --noinput'
+                sh 'pip install -r requirements.txt'
             }
         }
-
-        stage('Ejecutar tests') {
+        stage('Test')
+        {
             steps {
-                sh 'python manage.py test'
+                sh 'python3 manage.py test'
             }
-        }
-    }
-    post {
-        always {
-            junit '**/TEST-*.xml' // Si decides usar cobertura/test reporting más adelante
-        }
-        failure {
-            echo '❌ Tests fallidos.'
-        }
-        success {
-            echo '✅ Tests OK.'
         }
     }
 }
